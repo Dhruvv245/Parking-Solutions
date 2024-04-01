@@ -118,10 +118,10 @@ body {
     linear,
     left top,
     right top,
-    from(#7dd56f),
-    to(#28b487)
+    from(#764ba2),
+    to(#667eea)
   );
-  background-image: linear-gradient(to right, #7dd56f, #28b487);
+  background-image: linear-gradient(to right, #764ba2, #667eea);
   -webkit-background-clip: text;
   color: transparent;
   letter-spacing: 0.1rem;
@@ -156,14 +156,10 @@ body {
     linear,
     left top,
     right bottom,
-    from(rgba(125, 213, 111, 0.85)),
-    to(rgba(40, 180, 135, 0.85))
+    from(#764ba2),
+    to(#667eea)
   );
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(125, 213, 111, 0.85),
-    rgba(40, 180, 135, 0.85)
-  );
+  background-image: linear-gradient(to right bottom, #764ba2, #667eea);
 }
 
 .heading-primary {
@@ -231,11 +227,11 @@ body {
 }
 
 .btn--green {
-  background-color: #55c57a;
+  background-color: #667eea;
   color: #fff;
 }
 .btn--green::after {
-  background-color: #55c57a;
+  background-color: #667eea;
 }
 
 .btn--small {
@@ -382,10 +378,10 @@ body {
     linear,
     left top,
     right bottom,
-    from(#7dd56f),
-    to(#28b487)
+    from(#764ba2),
+    to(#667eea)
   );
-  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
+  background-image: linear-gradient(to right bottom, #764ba2, #667eea);
   opacity: 0.85;
 }
 
@@ -456,7 +452,11 @@ body {
   margin-right: 5rem;
 }
 .description-box .description__text {
-  font-size: 1.7rem;
+  color: #667eea;
+  font-size: 2.7rem;
+}
+.description-box .description__text:first-child {
+  margin-top: 2rem;
 }
 .description-box .description__text:not(:last-child) {
   margin-bottom: 2rem;
@@ -493,16 +493,13 @@ body {
 .overview-box__icon {
   height: 2.25rem;
   width: 2.25rem;
-  fill: #55c57a;
+  fill: #667eea;
 }
 .overview-box__label {
   font-weight: 700;
   margin-right: 2.25rem;
   text-transform: uppercase;
   font-size: 1.4rem;
-}
-.overview-box__text {
-  text-transform: capitalize;
 }
 .overview-box__img {
   border-radius: 50%;
@@ -621,10 +618,10 @@ body {
     linear,
     left top,
     right bottom,
-    from(#7dd56f),
-    to(#28b487)
+    from(#764ba2),
+    to(#667eea)
   );
-  background: linear-gradient(to right bottom, #7dd56f, #28b487);
+  background: linear-gradient(to right bottom, #764ba2, #667eea);
   clip-path: polygon(
     0 var(--section-rotate),
     100% 0,
@@ -709,7 +706,7 @@ body {
   margin-right: 1px;
 }
 .reviews__star--active {
-  fill: #55c57a;
+  fill: #667eea;
 }
 .reviews__star--inactive {
   fill: #bbb;
@@ -759,10 +756,10 @@ body {
     linear,
     left top,
     right bottom,
-    from(#7dd56f),
-    to(#28b487)
+    from(#764ba2),
+    to(#667eea)
   );
-  background: linear-gradient(to right bottom, #7dd56f, #28b487);
+  background: linear-gradient(to right bottom, #764ba2, #667eea);
   z-index: 10;
   -webkit-transform: translate(-35%, -50%);
   transform: translate(-35%, -50%);

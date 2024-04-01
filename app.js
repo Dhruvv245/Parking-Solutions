@@ -72,14 +72,10 @@ app.use(mongoSanitize());
 //Data sanitization against XSS
 app.use(xss());
 
-// app.get(`/`, (req, res) => {
-//   res.sendFile(`/index.html`);
+// app.use((req, res, next) => {
+//   console.log(req.cookies);
+//   next();
 // });
-
-app.use((req, res, next) => {
-  console.log(req.cookies);
-  next();
-});
 
 app.use(`/`, viewRouter);
 app.use(`/api/v1/parkings`, parkingRouter);

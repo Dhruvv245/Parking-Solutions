@@ -20,12 +20,15 @@ export const displayMap = (parkings) => {
   const bounds = new mapboxgl.LngLatBounds();
   parkings.forEach((parking) => {
     const el = document.createElement(`div`);
-    el.className = `${parking.slug} marker`;
+    el.className = `marker`;
     if (parking.role === `public`) {
       el.className = `marker-public`;
     } else {
       el.className = `marker-private`;
     }
+    el.addEventListener(`click`, () => {
+      location.assign(`/parking/${parking.slug}`);
+    });
     new mapboxgl.Marker({
       element: el,
       anchor: `bottom`,
@@ -95,11 +98,3 @@ export const getParkingsNearMe = async (distance, latlng, unit) => {
   }
 };
 
-export const getParking = () => {
-  const parkings = document.querySelectorAll(`.marker`);
-  parkings.forEach((el) => {
-    el.addEventListener(`click`, () => {
-      location.assign(`/parking/${el.classList[0]}`);
-    });
-  });
-};

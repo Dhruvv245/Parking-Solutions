@@ -14,6 +14,7 @@ import { showListParking } from './listParking';
 import { askPhoneNumber } from './listParking';
 import { showFileCount } from './listParking';
 import { createParking } from './listParking';
+import { freeSlotsUpdate } from './freeSlotsUpdate';
 
 //Animation Functions
 import { locoScroll } from './script';
@@ -48,6 +49,7 @@ const mapbox = document.getElementById('map');
 const search = document.getElementById('search-bar');
 const createParkingForm = document.querySelector(`.listParking-form`);
 const parkingType = document.getElementById('parking-type');
+const freeSlots = document.getElementById('freeSlots');
 
 //SIGNUP
 if (signUp) {
@@ -186,4 +188,10 @@ if (createParkingForm) {
     );
     await createParking(form, phoneNumber);
   });
+}
+
+//FREE SLOTS UPDATE
+if (freeSlots) {
+  const id = freeSlots.dataset.parkid;
+  freeSlotsUpdate(id);
 }

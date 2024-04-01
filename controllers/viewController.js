@@ -1,5 +1,5 @@
 const Parking = require(`./../models/parkingModel`);
-const User = require(`./../models/userModel`);
+const AppError = require(`../utils/appError`);
 const catchAsync = require(`../utils/catchAsync`);
 
 exports.getHome = catchAsync(async (req, res, next) => {
@@ -13,6 +13,19 @@ exports.findParking = catchAsync(async (req, res, next) => {
   res.status(200).render(`findParking`, {
     title: `Find Parking`,
     parkings,
+  });
+});
+
+exports.getParking = catchAsync(async (req, res, next) => {
+  const parking = await Parking.findOne({ slug: req.params.slug }).populate({
+    path: `reviews`,
+    fields: `review rating user`,
+  });
+  if (!parking)
+    return next(new AppError(`There is no parking with that name`, 404));
+  res.status(200).render(`parking`, {
+    title: `${parking.name}`,
+    parking,
   });
 });
 
