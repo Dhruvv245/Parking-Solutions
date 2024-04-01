@@ -6,6 +6,14 @@ import { logout } from './login';
 import { showLogin } from './login';
 import { showSignup } from './signup';
 import { showMenu } from './menu';
+import { showMap } from './findParking';
+import { displayMap } from './findParking';
+import { toggleSearch } from './findParking';
+import { getParkingsNearMe } from './findParking';
+import { showListParking } from './listParking';
+import { askPhoneNumber } from './listParking';
+import { showFileCount } from './listParking';
+import { createParking } from './listParking';
 
 //Animation Functions
 import { locoScroll } from './script';
@@ -16,7 +24,9 @@ import { loader } from './script';
 locoScroll();
 cursorEffect();
 sliderAnimaton();
-loader();
+if (document.getElementById(`loader`)) {
+  loader();
+}
 
 //DOM Elements
 const signupForm = document.querySelector(`.form-signup`);
@@ -31,6 +41,13 @@ const signupContainer = document.querySelector(
   '.signup-page .signup-container'
 );
 const menu = document.getElementById('menu');
+const newMenu = document.querySelector(`.menu`);
+const findParkingBtn = document.getElementById('findParking');
+const listParkingBtn = document.getElementById('listParking');
+const mapbox = document.getElementById('map');
+const search = document.getElementById('search-bar');
+const createParkingForm = document.querySelector(`.listParking-form`);
+const parkingType = document.getElementById('parking-type');
 
 //SIGNUP
 if (signUp) {
@@ -79,5 +96,94 @@ if (logoutBtn) {
 
 //MENU
 if (menu) {
-  showMenu(menu);
+  menu.addEventListener(`click`, () => {
+    showMenu(newMenu);
+  });
+}
+
+//FIND PARKING
+if (findParkingBtn) {
+  showMap(findParkingBtn);
+}
+if (mapbox) {
+  toggleSearch('search-bar', 'search-button');
+  const parkings = JSON.parse(document.getElementById(`map`).dataset.parkings);
+  displayMap(parkings);
+}
+if (search) {
+  search.addEventListener(`submit`, async (el) => {
+    el.preventDefault();
+    const distance = 10;
+    const unit = 'km';
+    const address = document.getElementById('search-input').value;
+    if (!address) {
+      const parkings = JSON.parse(
+        document.getElementById(`map`).dataset.parkings
+      );
+      displayMap(parkings);
+      return;
+    }
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        address
+      )}.json?access_token=pk.eyJ1IjoiY2hhdWhhbmRocnV2MjQ1IiwiYSI6ImNsdThjOXIyMjBjcjMyanBpbG5xN3RrZzkifQ.Xcn3mM3iZUlacqCGvPfwvA`
+    );
+    const data = await response.json();
+    const [lng, lat] = data.features[0].center;
+
+    const latlng = `${lat},${lng}`;
+    getParkingsNearMe(distance, latlng, unit);
+  });
+}
+
+//LIST PARKING
+if (listParkingBtn) {
+  showListParking(listParkingBtn);
+}
+if (createParkingForm) {
+  askPhoneNumber(parkingType);
+  showFileCount();
+  const owner = JSON.parse(createParkingForm.dataset.currentuser);
+  createParkingForm.addEventListener(`submit`, async (el) => {
+    el.preventDefault();
+    const phoneNumber = document.getElementById(`phone-number`).value;
+    const address = document.getElementById(`parking-address`).value;
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        address
+      )}.json?access_token=pk.eyJ1IjoiY2hhdWhhbmRocnV2MjQ1IiwiYSI6ImNsdThjOXIyMjBjcjMyanBpbG5xN3RrZzkifQ.Xcn3mM3iZUlacqCGvPfwvA`
+    );
+    const data = await response.json();
+    const [lng, lat] = data.features[0].center;
+    const location = {
+      type: `Point`,
+      coordinates: [lng, lat],
+      address,
+    };
+    const form = new FormData();
+    form.append(`name`, document.getElementById(`parking-name`).value);
+    form.append(`owner`, owner._id);
+    form.append(`maxSlots`, document.getElementById(`parking-maxSlots`).value);
+    form.append(`price`, document.getElementById(`parking-price`).value);
+    form.append(
+      `description`,
+      document.getElementById(`parking-description`).value
+    );
+    form.append(`location`, JSON.stringify(location));
+    form.append(`role`, document.getElementById(`parking-type`).value);
+    form.append(
+      `ownershipImage`,
+      document.getElementById(`parking-ownership`).files[0]
+    );
+    form.append(
+      `imageCover`,
+      document.getElementById(`parking-imageCover`).files[0]
+    );
+    Array.from(document.getElementById(`parking-images`).files).forEach(
+      (file) => {
+        form.append(`images`, file);
+      }
+    );
+    await createParking(form, phoneNumber);
+  });
 }

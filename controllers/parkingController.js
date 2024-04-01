@@ -3,6 +3,58 @@ const Parking = require(`./../models/parkingModel`);
 const catchAsync = require(`../utils/catchAsync`);
 const factory = require(`./factoryHandler`);
 
+//Image Processing
+const multer = require(`multer`);
+const sharp = require(`sharp`);
+
+const multerStorage = multer.memoryStorage();
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith(`image`)) {
+    cb(null, true);
+  } else {
+    cb(new AppError(`Please upload only images!`, 400), false);
+  }
+};
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+exports.uploadImages = upload.fields([
+  { name: `ownershipImage`, maxCount: 1 },
+  { name: `imageCover`, maxCount: 1 },
+  { name: `images`, maxCount: 3 },
+]);
+exports.resizeImages = catchAsync(async (req, res, next) => {
+  if (!req.files.ownershipImage || !req.files.imageCover || !req.files.images)
+    return next();
+  //Ownership Image
+  req.body.ownershipImage = `proof-${req.user.id}-${Date.now()}-owner.jpeg`;
+  await sharp(req.files.ownershipImage[0].buffer)
+    .toFormat(`jpeg`)
+    .toFile(`public/img/proofs/${req.body.ownershipImage}`);
+  //Cover Image
+  req.body.imageCover = `parking-${req.user.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat(`jpeg`)
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/parkings/${req.body.imageCover}`);
+  //Images
+  req.body.images = [];
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `parking-${req.user.id}-${Date.now()}-${i + 1}.jpeg`;
+      req.body.images.push(filename);
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat(`jpeg`)
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/parkings/${filename}`);
+    })
+  );
+  next();
+});
+
 exports.createParking = factory.createOne(Parking);
 exports.updateParking = factory.updateOne(Parking);
 exports.getAllParkings = factory.getAll(Parking);

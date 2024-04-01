@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, `Please provide a valid email`],
   },
+  phoneNumber: {
+    //Store phone numbers of only private parking owners
+    type: String,
+    trim: true,
+    unique: true,
+    sparse: true,
+    validate: [validator.isMobilePhone, `Please provide a valid phone number`],
+  },
   photo: {
     type: String,
   },

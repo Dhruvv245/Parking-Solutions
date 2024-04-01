@@ -5,8 +5,12 @@ export const showSignup = (signUp, register, container) => {
   signUp.addEventListener('click', (event) => {
     event.stopPropagation();
     document.querySelector('.signup-page').classList.add('signup-page--active');
-    document.querySelector('#page1-content').style.display = 'none';
-    document.querySelector(`#page1 video`).style.filter = 'blur(20px)';
+    if(document.querySelector(`#cursor`)){
+      document.querySelector('#page1-content').style.display = 'none';
+      document.querySelector(`#page1 video`).style.filter = 'blur(20px)';
+    }else{
+      document.querySelector(`#overlay`).style.display = `flex`;
+    }
   });
 
   register.addEventListener(`click`, (event) => {
@@ -29,8 +33,12 @@ export const showSignup = (signUp, register, container) => {
     document
       .querySelector('.signup-page')
       .classList.remove('signup-page--active');
-    document.querySelector('#page1-content').style.display = 'flex';
-    document.querySelector(`#page1 video`).style.filter = 'none';
+      if(document.querySelector(`#cursor`)){
+        document.querySelector('#page1-content').style.display = 'flex';
+        document.querySelector(`#page1 video`).style.filter = 'none';
+      }else{
+        document.querySelector(`#overlay`).style.display = `none`;
+      }
   });
 };
 

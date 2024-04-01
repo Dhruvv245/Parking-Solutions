@@ -5,8 +5,12 @@ export const showLogin = (login, container) => {
   login.addEventListener('click', (event) => {
     event.stopPropagation();
     document.querySelector('.login-page').classList.add('login-page--active');
-    document.querySelector('#page1-content').style.display = 'none';
-    document.querySelector(`#page1 video`).style.filter = 'blur(20px)';
+    if (document.querySelector(`#cursor`)) {
+      document.querySelector('#page1-content').style.display = 'none';
+      document.querySelector(`#page1 video`).style.filter = 'blur(20px)';
+    }else {
+      document.querySelector(`#overlay`).style.display = `flex`;
+    }
   });
 
   container.addEventListener('click', (event) => {
@@ -21,8 +25,12 @@ export const showLogin = (login, container) => {
     document
       .querySelector('.login-page')
       .classList.remove('login-page--active');
-    document.querySelector('#page1-content').style.display = 'flex';
-    document.querySelector(`#page1 video`).style.filter = 'none';
+    if (document.querySelector(`#cursor`)) {
+      document.querySelector('#page1-content').style.display = 'flex';
+      document.querySelector(`#page1 video`).style.filter = 'none';
+    }else {
+      document.querySelector(`#overlay`).style.display = `none`;
+    }
   });
 };
 
@@ -72,8 +80,10 @@ export const logout = async () => {
       url: `http://localhost:3000/api/v1/users/logout`,
     });
     if (res.data.status === `success`) {
-      location.reload(true);
       showAlert(`success`, `Logged out successfully!`);
+      window.setTimeout(() => {
+        location.reload(true);
+      }, 1000);
     }
   } catch (err) {
     showAlert(`error`, `Error logging out ! Try again`);

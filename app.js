@@ -12,6 +12,7 @@ const parkingRouter = require(`./routes/parkingRouter`);
 const userRouter = require(`./routes/userRouter`);
 const reviewRouter = require(`./routes/reviewRouter`);
 const viewRouter = require(`./routes/viewRouter`);
+const AppError = require(`./utils/appError`);
 
 const app = express();
 

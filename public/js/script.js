@@ -5,6 +5,8 @@ import Swiper from 'swiper';
 import AOS from 'aos';
 
 export const locoScroll = () => {
+  const mainElement = document.getElementById('main');
+  if(!mainElement) return;
   gsap.registerPlugin(ScrollTrigger);
 
   // Using Locomotive Scroll from Locomotive https://github.com/locomotivemtl/locomotive-scroll
@@ -50,6 +52,7 @@ export const locoScroll = () => {
 export const cursorEffect = () => {
   var page1Content = document.querySelector('#page1-content');
   var cursor = document.querySelector('#cursor');
+  if(!page1Content || !cursor) return;
 
   page1Content.addEventListener('mousemove', function (dets) {
     gsap.to(cursor, {

@@ -33,9 +33,12 @@ exports.updateOne = (Model) =>
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
+    if (req.body.location && typeof req.body.location === `string`) {
+      req.body.location = JSON.parse(req.body.location);
+    }
     const doc = await Model.create(req.body);
     res.status(201).json({
-      status: `Success`,
+      status: `success`,
       data: {
         data: doc,
       },
@@ -70,7 +73,7 @@ exports.getAll = (Model) =>
     const docs = await features.query;
 
     res.status(200).json({
-      status: `Success`,
+      status: `success`,
       results: docs.length,
       data: {
         data: docs,

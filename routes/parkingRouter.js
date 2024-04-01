@@ -10,18 +10,21 @@ router.use(`/:parkingId/reviews`, reviewRouter);
 router
   .route(`/parkings-within/:distance/center/:latlng/unit/:unit`)
   .get(parkingController.getParkingsWithin);
-router.route(`/distances/:latlng/unit/:unit`).get(parkingController.getDistances);
+router
+  .route(`/distances/:latlng/unit/:unit`)
+  .get(parkingController.getDistances);
 router
   .route(`/`)
   .get(parkingController.getAllParkings)
   .post(
     authController.protect,
-    authController.restrictTo(`admin`, `owner`),
+    parkingController.uploadImages,
+    parkingController.resizeImages,
     parkingController.createParking
   );
 router
   .route(`/:id`)
-  .get(freeSlotsController.updateFreeSlots,parkingController.getParking)
+  .get(freeSlotsController.updateFreeSlots, parkingController.getParking)
   .patch(
     authController.protect,
     authController.restrictTo(`admin`, `owner`),

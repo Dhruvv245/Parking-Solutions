@@ -1,5 +1,6 @@
 const mongoose = require(`mongoose`);
 const validator = require(`validator`);
+const slugify = require(`slugify`);
 const parkingSchema = new mongoose.Schema(
   {
     name: {
@@ -7,17 +8,23 @@ const parkingSchema = new mongoose.Schema(
       required: [true, `A parking must have a name`],
       unique: true,
       trim: true,
-      maxlength: [40, `A parking name must have less or equal than 40 characters`],
+      maxlength: [
+        40,
+        `A parking name must have less or equal than 40 characters`,
+      ],
+    },
+    slug: {
+      type: String,
     },
     maxSlots: {
       type: Number,
       required: [true, `A parking must have a slot count`],
     },
-    freeSlots:{
+    freeSlots: {
       type: Number,
-      default: function(){
+      default: function () {
         return this.maxSlots;
-      }
+      },
     },
     role: {
       type: String,
@@ -29,7 +36,7 @@ const parkingSchema = new mongoose.Schema(
       default: 4.5,
       min: [1, `Rating must be above 1`],
       max: [5, `Rating must be below 5`],
-      set: (val) => Math.round(val * 10) / 10, 
+      set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
       type: Number,
@@ -58,6 +65,13 @@ const parkingSchema = new mongoose.Schema(
       required: [true, `A parking must have a cover image`],
     },
     images: [String],
+    ownershipImage: {
+      type: String,
+      required: [
+        true,
+        `Without providing the ownership proof parking cannot be listed`,
+      ],
+    },
     createdAt: {
       type: Date,
       default: Date.now(),
@@ -77,12 +91,11 @@ const parkingSchema = new mongoose.Schema(
       address: String,
       description: String,
     },
-    owner: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: `User`,
-      },
-    ],
+    owner: {
+      type: mongoose.Schema.ObjectId,
+      ref: `User`,
+      required: [true, `A parking must have an owner`],
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -95,6 +108,11 @@ parkingSchema.virtual(`reviews`, {
   ref: `Reviews`,
   foreignField: `parking`,
   localField: `_id`,
+});
+//Document Middleware-
+parkingSchema.pre(`save`, function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
 });
 //Query Middleware-
 parkingSchema.pre(/^find/, function (next) {
