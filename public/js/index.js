@@ -15,6 +15,8 @@ import { askPhoneNumber } from './listParking';
 import { showFileCount } from './listParking';
 import { createParking } from './listParking';
 import { freeSlotsUpdate } from './freeSlotsUpdate';
+import { bookSlot } from './stripe';
+import { updateSettings } from './updateSettings';
 
 //Animation Functions
 import { locoScroll } from './script';
@@ -50,6 +52,9 @@ const search = document.getElementById('search-bar');
 const createParkingForm = document.querySelector(`.listParking-form`);
 const parkingType = document.getElementById('parking-type');
 const freeSlots = document.getElementById('freeSlots');
+const bookBtn = document.getElementById(`book-slot`);
+const userDataForm = document.querySelector(`.form-user-data`);
+const userPasswordForm = document.querySelector(`.form-user-settings`);
 
 //SIGNUP
 if (signUp) {
@@ -194,4 +199,45 @@ if (createParkingForm) {
 if (freeSlots) {
   const id = freeSlots.dataset.parkid;
   freeSlotsUpdate(id);
+}
+if (bookBtn) {
+  bookBtn.addEventListener(`click`, (el) => {
+    el.target.textContent = `Processing...`;
+    const { parkingid } = el.target.dataset;
+    bookSlot(parkingid);
+  });
+}
+
+//UPDATE SETTINGS
+if (userDataForm) {
+  userDataForm.addEventListener(`submit`, (el) => {
+    el.preventDefault();
+    const form = new FormData(); //Creates a new FormData object as a key-value pair
+    form.append(`name`, document.getElementById(`name`).value);
+    form.append(`email`, document.getElementById(`email`).value);
+    form.append(`photo`, document.getElementById(`photo`).files[0]);
+    updateSettings(form, `data`);
+  });
+}
+
+if (userPasswordForm) {
+  userPasswordForm.addEventListener(`submit`, async (el) => {
+    el.preventDefault();
+    document.querySelector(`.btn--save--password`).textContent = `Updating...`;
+    const passwordCurrent = document.getElementById(`password-current`).value;
+    const password = document.getElementById(`password`).value;
+    const passwordConfirm = document.getElementById(`password-confirm`).value;
+    const data = {
+      passwordCurrent,
+      password,
+      passwordConfirm,
+    };
+    await updateSettings(data, `password`);
+    document.querySelector(
+      `.btn--save--password`
+    ).textContent = `Save password`;
+    document.getElementById('password-current').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('password-confirm').value = '';
+  });
 }

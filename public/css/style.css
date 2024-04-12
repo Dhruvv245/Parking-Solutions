@@ -20,7 +20,7 @@ body {
   width: 100%;
 }
 #page1 {
-  height: 100vh;
+  height: 100%;
   width: 100%;
 
   background-color: rgba(169, 169, 169, 1);
@@ -438,13 +438,13 @@ body .menu a:hover {
 }
 
 #page3 {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   position: relative;
   padding: 3vw;
   background: white;
   color: white;
-  min-block-size: 100dvh;
+  min-block-size: 100vh;
   display: grid;
   place-items: center;
 }
@@ -477,7 +477,7 @@ body .menu a:hover {
 }
 
 #page4 {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   padding: 2vw 0;
   position: relative;
@@ -499,7 +499,6 @@ body .menu a:hover {
   margin-left: 2%;
 }
 #page4 #page4-top h3 {
-  text-wrap: pretty;
   margin-right: 2%;
   width: 100%;
   font-size: 1.2vw;

@@ -11,6 +11,7 @@ const cookieParser = require(`cookie-parser`);
 const parkingRouter = require(`./routes/parkingRouter`);
 const userRouter = require(`./routes/userRouter`);
 const reviewRouter = require(`./routes/reviewRouter`);
+const bookingRouter = require(`./routes/bookingRouter`);
 const viewRouter = require(`./routes/viewRouter`);
 const AppError = require(`./utils/appError`);
 
@@ -81,6 +82,7 @@ app.use(`/`, viewRouter);
 app.use(`/api/v1/parkings`, parkingRouter);
 app.use(`/api/v1/users`, userRouter);
 app.use(`/api/v1/reviews`, reviewRouter);
+app.use(`/api/v1/bookings`, bookingRouter);
 app.all(`*`, (req, res, next) => {
   const err = new AppError(
     `Can't find ${req.originalUrl} on this server!`,

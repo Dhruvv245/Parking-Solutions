@@ -1,4 +1,5 @@
 const Parking = require(`./../models/parkingModel`);
+const Booking = require(`./../models/bookingModel`);
 const AppError = require(`../utils/appError`);
 const catchAsync = require(`../utils/catchAsync`);
 
@@ -21,11 +22,13 @@ exports.getParking = catchAsync(async (req, res, next) => {
     path: `reviews`,
     fields: `review rating user`,
   });
+  const bookings = await Booking.find({ parking: parking._id });
   if (!parking)
     return next(new AppError(`There is no parking with that name`, 404));
   res.status(200).render(`parking`, {
     title: `${parking.name}`,
     parking,
+    bookings,
   });
 });
 
@@ -38,5 +41,15 @@ exports.listParking = catchAsync(async (req, res, next) => {
 exports.getAccount = catchAsync(async (req, res, next) => {
   res.status(200).render(`accountTry`, {
     title: `Your account`,
+  });
+});
+
+exports.getMyBookings = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find({ user: req.user.id });
+  const parkingIds = bookings.map((el) => el.parking);
+  const parkings = await Parking.find({ _id: { $in: parkingIds } });
+  res.status(200).render(`myBookings`, {
+    title: `My Bookings`,
+    parkings,
   });
 });
