@@ -4,7 +4,6 @@ const catchAsync = require('./../utils/catchAsync');
 const User = require(`./../models/userModel`);
 const AppError = require(`./../utils/appError`);
 const Email = require(`../utils/email`);
-const bcrypt = require(`bcryptjs`);
 const crypto = require(`crypto`);
 
 const signToken = (id) => {

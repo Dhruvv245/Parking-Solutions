@@ -1,4 +1,3 @@
-const mongoose = require(`mongoose`);
 const multer = require(`multer`);
 const sharp = require(`sharp`);
 const User = require(`./../models/userModel`);
